@@ -54,7 +54,7 @@ public class LoginController {
             //LoginResponseDTO loginResponseDTO = webClientAuthentication.postForObject("/login", loginRequestDTO, LoginResponseDTO.class);
 
             Mono<LoginResponseDTO> monoLoginResponseDTO = webClientAuthentication.post()
-                    .uri("http://localhost:8090/autenticacion/login")
+                    .uri("/login")
                     .body(Mono.just(loginRequestDTO), LoginRequestDTO.class)
                     .retrieve()
                     .bodyToMono(LoginResponseDTO.class);
