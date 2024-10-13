@@ -11,12 +11,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import pe.edu.cibertec.patitas_frontend_wc.dto.LoginRequestDTO;
 import pe.edu.cibertec.patitas_frontend_wc.dto.LoginResponseDTO;
+import pe.edu.cibertec.patitas_frontend_wc.dto.LogoutRequestDTO;
+import pe.edu.cibertec.patitas_frontend_wc.dto.LogoutResponseDTO;
 import pe.edu.cibertec.patitas_frontend_wc.viewmodel.LoginModel;
 import reactor.core.publisher.Mono;
 
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+
+    @Autowired
+    RestTemplate restTemplateAutenticacion;
 
     @Autowired
     WebClient webClientAuthentication;
@@ -99,6 +104,33 @@ public class LoginController {
 //        return "inicio";
 
 
+
+    }
+
+    @PostMapping("/logOut")
+    public String logOut(@RequestParam("tipoDocumento") String tipoDocumento,
+                         @RequestParam("numeroDocumento") String numeroDocumento,
+                         Model model) {
+
+        LogoutRequestDTO logoutRequestDTO = new LogoutRequestDTO(tipoDocumento, numeroDocumento);
+        Mono<LogoutResponseDTO> monoLogoutResponseDTO = webClientAuthentication.post()
+                .uri("/logout")
+                .body(Mono.just(logoutRequestDTO), LogoutRequestDTO.class)
+                .retrieve()
+                .bodyToMono(LogoutResponseDTO.class);
+
+        //recuperar resultado moodo bloquenate (Sincronico)
+        LogoutResponseDTO logoutResponseDTO = monoLogoutResponseDTO.block();
+
+        if (logoutResponseDTO.codigo().equals("00")){
+
+            return "redirect:/login/inicio";
+
+        } else {
+            model.addAttribute("error", "Error al cerrar sesión");
+            return "principal";
+
+        }
 
 
     }
