@@ -13,6 +13,8 @@ import reactor.core.publisher.Mono;
 @CrossOrigin("http://localhost:5173/")
 public class LougControllerFeign {
 
+    //Inyectamos la instancia del cliente Feign
+    //Authenticacion client es la interfaz que se creo en el paquete client que define los metodos que se van a utilizar
     @Autowired
     AuthenticacionClient authenticacionClient;
 
@@ -21,7 +23,7 @@ public class LougControllerFeign {
         System.out.println("Logout Session with Feign");
 
         //Se realizara la llamada al servicio de autenticacion
-        try {
+        try {                                                           // el mono es un tipo de dato que se utiliza en programacion reactiva
             ResponseEntity<LogoutResponseDTO> responseEntity = Mono.just( authenticacionClient.logout(logoutRequestDTO))
                     .flatMap(response -> { // Se realiza el mapeo de la respuesta del servicio
                         // Se verifica si la respuesta es exitosa
@@ -41,7 +43,7 @@ public class LougControllerFeign {
                         // Se imprime el error en consola
                         System.out.println("Error: " + e.getMessage());
                         return Mono.just(ResponseEntity.status(500).body(new LogoutResponseDTO("99", "Error: Ocurrió un problema en el cierre de sesión.", "", "")));
-                    }).block(); // Bloquea el hilo hasta que el Mono se complete
+                    }).block(); // el block espera a que la llamada al servicio se complete de manera sincrona
             return responseEntity;
 
         }catch (Exception e){

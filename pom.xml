@@ -30,7 +30,7 @@
 		<java.version>21</java.version>
 	</properties>
 
-	<!-- Spring Cloud -->
+	<!-- Spring Cloud - Framework nos permite a los dev construir sistema distribuidos y microservicios-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -69,6 +69,8 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--esta dependencia es para el uso de Feign client el cual incluye-->
+		<!-- todo los componentes para user el open feign en la aplicacion -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
